@@ -1,4 +1,4 @@
-CFLAGS = -include headers.h -g -Wall -O0 -o
+CFLAGS = -include headers.h -g -Wall -Ofast -o
 CC = c99
 
 DEL = rm -rf
