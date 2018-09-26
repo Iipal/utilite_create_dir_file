@@ -1,16 +1,11 @@
-#define ECHO_RED(msg) "echo \"\033[0;31m" msg "\033[0m\""
-#define ERR_MSG "Something wrong.\nMaybe programm hasn't access to create something on your pc.\n"
-
-int		g_sys;
-
-enum    e_keys {
+enum	e_keys{
     DIRECTORY = 1,
     FILE_NAME
 };
 
 void    ft_action(const char *action, const char *dir, const char *file)
 {
-    char    *act;
+	char    *act;
     int     act_len;
     int     dir_len;
     int     file_len;
@@ -23,24 +18,38 @@ void    ft_action(const char *action, const char *dir, const char *file)
         file ? snprintf(act, act_len, "%s%s/%s", action, dir, file) :
                 snprintf(act, act_len, "%s%s", action, dir);
         printf("$ %s\n", act);
-        if ((g_sys = system(act)) == -1)
-			printf("%s", ERR_MSG);
+        if (system(act) == -1)
+			printf("%s", ERR_MSG_SYS);
     } else
-		if ((g_sys = system(ECHO_RED("mem err."))) == -1)
-			printf("%s", ERR_MSG);
+		if (system(ECHO_RED(ERR_MSG_MEM)) == -1)
+			printf("%s", ERR_MSG_SYS);
     free(act);
+}
+
+int		ft_simple_parse(char *dir_or_file)
+{
+	if ((strchr(dir_or_file, '.')) == NULL)
+		return (DIRECTORY);
+	return (FILE_NAME);
 }
 
 int     main(int argc, char **argv)
 {
-	g_sys = 0;
 	if (argc == 3)
     {
-        ft_action("mkdir ", argv[DIRECTORY], NULL);
-        ft_action("touch ", argv[DIRECTORY], argv[FILE_NAME]);
+        ft_action(_MKDIR, argv[DIRECTORY], NULL);
+        ft_action(_TOUCH, argv[DIRECTORY], argv[FILE_NAME]);
     } else if (argc == 2)
-        ft_action("mkdir ", argv[DIRECTORY], NULL);
-    else
-		if ((g_sys =system(ECHO_RED("not enought args."))) == -1)
-			printf("%s", ERR_MSG);
+		if (ft_simple_parse(argv[DIRECTORY]) == DIRECTORY)
+        	ft_action(_MKDIR, argv[DIRECTORY], NULL);
+		else
+			ft_action(_TOUCH, _CURRENT_DIR, argv[DIRECTORY]);
+	else
+		if (argc < 2)
+		{
+			if (system(ECHO_RED(ERR_MSG_LESS_ARGS)) == -1)
+				printf("%s", ERR_MSG_SYS);
+		} else if (argc > 3)
+			if (system(ECHO_RED(ERR_MSG_2MUCH_ARGS)) == -1)
+				printf("%s", ERR_MSG_SYS);
 }
