@@ -1,37 +1,36 @@
-CFLAGS = -include includes.h -g -Wall -Ofast -o
+P = create
+L = lib/libcreate.a
 CC = c99
+CL = ar rcs
 
-DEL = rm -rf
+P_INC = -include lib/includes/libcreate.h
+CFLAGS = -g -Wall -Wextra -Werror -o
 
-ECHO_GREEN = \033[0;32m
-ECHO_RED = \033[0;31m
-ECHO_WHITE = \033[0m
+DIR_SRCS = lib/srcs/
 
-all:
-	@$(CC) main.c $(CFLAGS) create
-	@echo "$(ECHO_GREEN)success.$(ECHO_WHITE)"
+OBJ_MKDIR = $(shell mkdir lib/srcs/obj)
+OBJ_DIR = $(DIR_SRCS)obj/
+OBJ = $(OBJ_DIR)ft_noflags_parse.o $(OBJ_DIR)ft_flags_parse.o
+
+DEL = rm -rfv
+
+all: $L $P
+
+$L:
+	$(OBJ_MKDIR)
+	$(CC) $(DIR_SRCS)ft_noflags_parse.c -c $(P_INC) $(CFLAGS) $(OBJ_DIR)ft_noflags_parse.o
+	$(CC) $(DIR_SRCS)ft_flags_parse.c -c $(P_INC) $(CFLAGS) $(OBJ_DIR)ft_flags_parse.o
+	$(CL) $L $(OBJ)
+$P:
+	$(CC) main.c $(P_INC) $(CFLAGS) $P -Llib/. -lcreate
+
 clean:
-	@$(DEL) create*
-	@echo "$(ECHO_RED)executable file deleted.$(ECHO_WHITE)"
-help_make:
-	@echo "just type: $(ECHO_GREEN)make$(ECHO_WHITE) for create executable file."
-	@echo "for delete executable file type: $(ECHO_RED)make clean$(ECHO_WHITE)"
-help_create:
-	@echo "   You can write 1 or 2 args for this programm."
-	@echo "If you write only 1 args for this programm:"
-	@echo " "
-	@echo " If you type argument without any extension - programm will create directory with your name."
-	@echo "  $(ECHO_GREEN)example:$(ECHO_WHITE) ./create dir_name"
-	@echo "   $$ mkdir dir_name"
-	@echo " "
-	@echo " If you type argument with any extension - programm will create file with your name and extension."
-	@echo "  $(ECHO_GREEN)example:$(ECHO_WHITE) ./create main.c"
-	@echo "   $$ touch main.c"
-	@echo " "
-	@echo "If you write 2 args programm will create directory with your name and"\
-	" 1 file inside this directory with your name"
-	@echo " $(ECHO_GREEN)example:$(ECHO_WHITE) ./create dir_name main.c"
-	@echo "  $$ mkdir dir_name"
-	@echo "  $$ touch dir_name/main.c"
-	@echo " "
-.PHONY: all clean help_make help_create
+	@$(DEL) $(OBJ_DIR)
+
+fclean: clean
+	@$(DEL) $L
+	@$(DEL) $P
+
+re: fclean all
+
+.PHONY: re fclean all $P $L all
