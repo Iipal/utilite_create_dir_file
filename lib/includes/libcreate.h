@@ -14,7 +14,7 @@ typedef char* string;
 
 # define _SYS_CURRENT_PATH "pwd"
 # define _SYS_TOUCH "touch "
-# define _SYS_MKDIR "mkdir "
+# define _SYS_MKDIR "mkdir -p "
 
 # define ERR_NOARGS "ERROR: Not enought args for start.\n"
 # define ERR_TOOMANY_ARGS_NOFLAGS "ERROR: Too many args for non-flags work.\n"
