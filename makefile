@@ -1,6 +1,6 @@
 P = create
 L = lib/libcreate.a
-CC = c99
+CC = gcc -pipe -march=native
 CL = ar rcs
 
 P_INC = -include lib/includes/libcreate.h
@@ -10,7 +10,9 @@ DIR_SRCS = lib/srcs/
 
 OBJ_MKDIR = $(shell mkdir lib/srcs/obj)
 OBJ_DIR = $(DIR_SRCS)obj/
-OBJ = $(OBJ_DIR)ft_noflags_parse.o $(OBJ_DIR)ft_flags_parse.o
+OBJ = $(OBJ_DIR)ft_noflags_parse.o	\
+	  $(OBJ_DIR)ft_flags_parse.o	\
+	  $(OBJ_DIR)ft_action.o
 
 DEL = rm -rfv
 
@@ -20,6 +22,7 @@ $L:
 	$(OBJ_MKDIR)
 	$(CC) $(DIR_SRCS)ft_noflags_parse.c -c $(P_INC) $(CFLAGS) $(OBJ_DIR)ft_noflags_parse.o
 	$(CC) $(DIR_SRCS)ft_flags_parse.c -c $(P_INC) $(CFLAGS) $(OBJ_DIR)ft_flags_parse.o
+	$(CC) $(DIR_SRCS)ft_action.c -c $(P_INC) $(CFLAGS) $(OBJ_DIR)ft_action.o
 	$(CL) $L $(OBJ)
 $P:
 	$(CC) main.c $(P_INC) $(CFLAGS) $P -Llib/. -lcreate
